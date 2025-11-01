@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamus Bahasa Gaul Indonesia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .category-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .category-btn.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .word-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .word-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .word-title {
+            font-size: 1.8em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .trending-badge {
+            background: #ff4757;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .word-meaning {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .word-example {
+            color: #777;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .tag-category {
+            background: #e1bee7;
+            color: #6a1b9a;
+        }
+
+        .tag-origin {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .like-btn {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .like-btn.liked {
+            background: #ff4757;
+            color: white;
+        }
+
+        .share-btn {
+            background: #4dabf7;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .empty-state-text {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            border-radius: 15px;
+        }
+
+        .footer-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .footer-school {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .word-title {
+                font-size: 1.4em;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Kamus Bahasa Gaul Indonesia</h1>
+            <p>Pahami bahasa gaul anak muda masa kini! 🔥</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('kamus')">📖 Kamus Lengkap</button>
+            <button class="tab-btn" onclick="switchTab('trending')">🔥 Trending</button>
+            <button class="tab-btn" onclick="switchTab('favorit')">❤️ Favorit Saya</button>
+        </div>
+
+        <div id="kamusTab">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="🔍 Cari kata gaul..." id="searchInput" oninput="filterWords()">
+            </div>
+
+            <div class="categories" id="categories"></div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWords">0</div>
+                    <div class="stat-label">Total Kata</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCategories">0</div>
+                    <div class="stat-label">Kategori</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTrending">0</div>
+                    <div class="stat-label">Trending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalLiked">0</div>
+                    <div class="stat-label">Disukai</div>
+                </div>
+            </div>
+
+            <div class="word-list" id="wordList"></div>
+        </div>
+
+        <div id="trendingTab" class="hidden">
+            <h2 style="color: white; margin-bottom: 20px; font-size: 2em;">🔥 Kata Gaul Trending Sekarang</h2>
+            <div class="word-list" id="trendingList"></div>
+        </div>
+
+        <div id="favoritTab" class="hidden">
+            <h2 style="color: white; margin-bottom: 20px; font-size: 2em;">❤️ Kata Gaul Favorit Saya</h2>
+            <div class="word-list" id="favoritList"></div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-title">🎓 Dibuat Oleh:</div>
+            <div class="footer-school">Kelompok 1 Kelas X-3</div>
+            <div class="footer-school">SMAN 11 BANDUNG</div>
+            <p style="margin-top: 15px; color: #aaa;">Dibuat dengan ❤️ untuk anak muda Indonesia</p>
+            <p style="margin-top: 5px; color: #888;">Update terus bahasa gaul terbaru!</p>
+        </div>
+    </div>
+
+    <script>
+        const slangWords = [
+            { id: 1, word: 'Gaskeun', meaning: 'Ayo, jalan terus, lakukan', example: 'Gaskeun ke mall yuk!', category: 'aksi', trending: true, origin: 'Sunda' },
+            { id: 2, word: 'Santuy', meaning: 'Santai, tenang, rileks', example: 'Santuy aja bro, nanti juga beres', category: 'suasana', trending: true, origin: 'Jakarta' },
+            { id: 3, word: 'Kepo', meaning: 'Ingin tahu urusan orang lain', example: 'Jangan kepo deh sama hidup orang', category: 'sifat', trending: false, origin: 'Internet' },
+            { id: 4, word: 'Gercep', meaning: 'Gerak cepat, sigap', example: 'Gercep dong ordernya, udah laper nih', category: 'aksi', trending: true, origin: 'Jakarta' },
+            { id: 5, word: 'Bucin', meaning: 'Budak cinta, terlalu cinta', example: 'Dia bucin banget sama pacarnya', category: 'cinta', trending: true, origin: 'Internet' },
+            { id: 6, word: 'Mager', meaning: 'Malas gerak, males banget', example: 'Hari minggu paling enak mager di rumah', category: 'suasana', trending: false, origin: 'Internet' },
+            { id: 7, word: 'Gabut', meaning: 'Gak ada yang buat, bosan', example: 'Gabut banget nih weekend gak ada kerjaan', category: 'suasana', trending: true, origin: 'Jakarta' },
+            { id: 8, word: 'Anjay', meaning: 'Ekspresi kaget atau kagum', example: 'Anjay keren banget mobilnya!', category: 'ekspresi', trending: true, origin: 'Internet' },
+            { id: 9, word: 'Skuy', meaning: 'Ayo, yuk (dari "lets go")', example: 'Skuy berangkat sekarang!', category: 'aksi', trending: true, origin: 'Internet' },
+            { id: 10, word: 'Baper', meaning: 'Bawa perasaan, tersinggung', example: 'Jangan baper ya, cuma becanda kok', category: 'perasaan', trending: true, origin: 'Internet' },
+            { id: 11, word: 'Salty', meaning: 'Kesal, dongkol', example: 'Dia salty karena kalah main game', category: 'perasaan', trending: false, origin: 'Internet' },
+            { id: 12, word: 'Ngab', meaning: 'Panggilan untuk teman/bro', example: 'Gimana kabarnya ngab?', category: 'sapaan', trending: true, origin: 'Jakarta' },
+            { id: 13, word: 'Receh', meaning: 'Tidak penting, sepele', example: 'Guyonannya receh banget', category: 'sifat', trending: false, origin: 'Jakarta' },
+            { id: 14, word: 'Lit', meaning: 'Keren, seru banget', example: 'Konsernya lit abis!', category: 'ekspresi', trending: true, origin: 'Internet' },
+            { id: 15, word: 'Ghosting', meaning: 'Menghilang tanpa kabar', example: 'Dia ghosting gue setelah kencan pertama', category: 'cinta', trending: true, origin: 'Internet' },
+            { id: 16, word: 'Vibes', meaning: 'Suasana, aura', example: 'Vibesnya enak banget di cafe ini', category: 'suasana', trending: true, origin: 'Internet' },
+            { id: 17, word: 'Sabi', meaning: 'Bisa, oke, siap', example: 'Sabi gas aja!', category: 'aksi', trending: true, origin: 'Internet' },
+            { id: 18, word: 'Cuan', meaning: 'Untung, keuntungan', example: 'Bisnis ini cuan banget bro', category: 'uang', trending: true, origin: 'Hokkien' },
+            { id: 19, word: 'Cringe', meaning: 'Malu lihat tingkah orang', example: 'Cringe banget tingkahnya', category: 'perasaan', trending: true, origin: 'Internet' },
+            { id: 20, word: 'Mantul', meaning: 'Mantap betul', example: 'Hasilnya mantul banget!', category: 'ekspresi', trending: false, origin: 'Jakarta' },
+            { id: 21, word: 'FOMO', meaning: 'Fear Of Missing Out, takut ketinggalan', example: 'FOMO banget lihat temen jalan-jalan', category: 'perasaan', trending: true, origin: 'Internet' },
+            { id: 22, word: 'Japri', meaning: 'Jalur pribadi, chat pribadi', example: 'Japri aja nanti kita bahas detail', category: 'aksi', trending: false, origin: 'Internet' },
+            { id: 23, word: 'Ngegas', meaning: 'Buru-buru, terburu nafsu', example: 'Jangan ngegas dong, pikirkan dulu', category: 'aksi', trending: true, origin: 'Jakarta' },
+            { id: 24, word: 'Mending', meaning: 'Lebih baik, lebih enak', example: 'Mending di rumah deh daripada kehujanan', category: 'pilihan', trending: false, origin: 'Jakarta' },
+            { id: 25, word: 'Slow Respon', meaning: 'Lama membalas pesan', example: 'Maaf ya slow respon, lagi sibuk', category: 'sifat', trending: true, origin: 'Internet' },
+            { id: 26, word: 'Norak', meaning: 'Kampungan, tidak elegan', example: 'Gayanya norak banget deh', category: 'sifat', trending: false, origin: 'Jakarta' },
+            { id: 27, word: 'Julid', meaning: 'Suka menghina, nyinyir', example: 'Dia orangnya julid banget ke semua orang', category: 'sifat', trending: false, origin: 'Jakarta' },
+            { id: 28, word: 'Toxic', meaning: 'Beracun, hubungan tidak sehat', example: 'Hubungan mereka toxic banget', category: 'cinta', trending: true, origin: 'Internet' },
+            { id: 29, word: 'Sultan', meaning: 'Orang kaya raya', example: 'Dia sultan beneran, mobilnya lima', category: 'uang', trending: true, origin: 'Internet' },
+            { id: 30, word: 'YOLO', meaning: 'You only live once', example: 'Lakuin aja YOLO!', category: 'ekspresi', trending: false, origin: 'Internet' },
+            { id: 31, word: 'PHP', meaning: 'Pemberi Harapan Palsu', example: 'Jangan PHP dong, serius apa enggak?', category: 'cinta', trending: true, origin: 'Internet' },
+            { id: 32, word: 'Bestie', meaning: 'Sahabat terbaik', example: 'Dia bestie gue dari SD', category: 'sapaan', trending: true, origin: 'Internet' },
+            { id: 33, word: 'Bro', meaning: 'Panggilan untuk teman laki-laki', example: 'Gimana bro udah pulang?', category: 'sapaan', trending: true, origin: 'Internet' },
+            { id: 34, word: 'Sis', meaning: 'Panggilan untuk teman perempuan', example: 'Sis, kemana aja sih lama gak keliatan', category: 'sapaan', trending: true, origin: 'Internet' },
+            { id: 35, word: 'Woles', meaning: 'Santai, tenang', example: 'Woles aja lagi, gausah panik', category: 'suasana', trending: false, origin: 'Jakarta' },
+            { id: 36, word: 'Ngakak', meaning: 'Tertawa terbahak-bahak', example: 'Ngakak parah lihat video itu', category: 'ekspresi', trending: true, origin: 'Jakarta' },
+            { id: 37, word: 'Goks', meaning: 'Gila, keren banget', example: 'Goks banget sih lu!', category: 'ekspresi', trending: false, origin: 'Jakarta' },
+            { id: 38, word: 'Ambyar', meaning: 'Hancur, berantakan', example: 'Hatinya ambyar ditinggal pacar', category: 'perasaan', trending: true, origin: 'Jawa' },
+            { id: 39, word: 'Baperan', meaning: 'Mudah tersinggung', example: 'Jangan baperan ya, cuma bercanda', category: 'sifat', trending: true, origin: 'Internet' },
+            { id: 40, word: 'Kuy', meaning: 'Ayo (singkatan dari ayok)', example: 'Kuy berangkat sekarang!', category: 'aksi', trending: false, origin: 'Jakarta' },
+            { id: 41, word: 'Lah', meaning: 'Ekspresi keheranan', example: 'Lah kok bisa gitu?', category: 'ekspresi', trending: false, origin: 'Jakarta' },
+            { id: 42, word: 'fire', meaning: 'Pujian untuk sesuatu yang keren', example: 'deym outfit mu its so fire!', category: 'ekspresi', trending: true, origin: 'Jakarta' },
+            { id: 43, word: 'Syedap', meaning: 'Enak, mantap', example: 'Syedap banget makanannya!', category: 'ekspresi', trending: false, origin: 'Internet' },
+            { id: 44, word: 'Pantes', meaning: 'Pantas, wajar', example: 'Pantes aja dia juara', category: 'ekspresi', trending: false, origin: 'Jakarta' },
+            { id: 45, word: 'OMG', meaning: 'Oh my god, Ekspresi kagum atau terkejut', example: 'OMG cantik banget!', category: 'ekspresi', trending: true, origin: 'Internet' },
+            { id: 46, word: 'OTW', meaning: 'On The Way, dalam perjalanan', example: 'OTW kesana nih, tunggu ya', category: 'aksi', trending: true, origin: 'Internet' },
+            { id: 47, word: 'Garing', meaning: 'Tidak lucu, kaku', example: 'Becandanya garing banget', category: 'sifat', trending: false, origin: 'Jakarta' },
+            { id: 48, word: 'Nyesek', meaning: 'Sedih, kecewa', example: 'Nyesek banget gak lolos seleksi', category: 'perasaan', trending: false, origin: 'Jawa' },
+            { id: 49, word: 'Ngebet', meaning: 'Sangat ingin, pengen banget', example: 'Ngebet banget pengen ke konser', category: 'perasaan', trending: false, origin: 'Jakarta' },
+            { id: 50, word: 'Gemes', meaning: 'Gemas, lucu banget', example: 'Gemes banget lihat dia >_<', category: 'perasaan', trending: true, origin: 'Jakarta' },
+            { id: 51, word: 'Absurd', meaning: 'Aneh, tidak masuk akal', example: 'Absurd banget idenya', category: 'ekspresi', trending: false, origin: 'Internet' },
+            { id: 52, word: 'Slay', meaning: 'Keren banget, sempurna', example: 'Outfit kamu hari ini slay bangett!', category: 'ekspresi', trending: true, origin: 'Internet' },
+            { id: 53, word: 'Makjleb', meaning: 'Menohok, kena banget', example: 'Kata-katanya makjleb banget ke hati', category: 'perasaan', trending: false, origin: 'Jawa' },
+            { id: 54, word: 'Auto', meaning: 'Otomatis, langsung', example: 'Lihat makanan auto laper', category: 'aksi', trending: true, origin: 'Internet' },
+            { id: 55, word: 'FYI', meaning: 'For Your Information, untuk info kamu', example: 'FYI besok aku nikah lho', category: 'aksi', trending: false, origin: 'Internet' },
+            { id: 56, word: 'Alay', meaning: 'Lebay, norak, berlebihan', example: 'Gaya lu alay deh', category: 'sifat', trending: false, origin: 'Jakarta' },
+            { id: 57, word: 'Zonk', meaning: 'Gagal, tidak dapat apa-apa', example: 'Zonk deh undiannya', category: 'perasaan', trending: false, origin: 'Jakarta' },
+            { id: 58, word: 'Curcol', meaning: 'Curhat Colongan, curhat mendadak', example: 'Maaf ya curcol bentar', category: 'aksi', trending: false, origin: 'Internet' },
+            { id: 59, word: 'Kece', meaning: 'Keren', example: 'Kece banget penampilannya', category: 'ekspresi', trending: false, origin: 'Jakarta' },
+            { id: 60, word: 'sok banget', meaning: 'Sok cool, sok keren', example: 'Jangan sok banget deh', category: 'sifat', trending: false, origin: 'Internet' },
+        ];
+
+        const categories = [
+            { id: 'semua', name: 'Semua', icon: '📚' },
+            { id: 'aksi', name: 'Aksi', icon: '⚡' },
+            { id: 'suasana', name: 'Suasana', icon: '🌈' },
+            { id: 'cinta', name: 'Cinta', icon: '💕' },
+            { id: 'ekspresi', name: 'Ekspresi', icon: '😎' },
+            { id: 'perasaan', name: 'Perasaan', icon: '💭' },
+            { id: 'sapaan', name: 'Sapaan', icon: '👋' },
+            { id: 'sifat', name: 'Sifat', icon: '🎭' },
+            { id: 'uang', name: 'Uang', icon: '💰' },
+            { id: 'pilihan', name: 'Pilihan', icon: '🤔' },
+        ];
+
+        let likedWords = [];
+        let selectedCategory = 'semua';
+
+        function init() {
+            renderCategories();
+            updateStats();
+            renderWords();
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories');
+            container.innerHTML = categories.map(cat => 
+                `<button class="category-btn ${cat.id === 'semua' ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+                    ${cat.icon} ${cat.name}
+                </button>`
+            ).join('');
+        }
+
+        function selectCategory(catId) {
+            selectedCategory = catId;
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            filterWords();
+        }
+
+        function filterWords() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = slangWords.filter(word => {
+                const matchSearch = word.word.toLowerCase().includes(searchTerm) || 
+                                   word.meaning.toLowerCase().includes(searchTerm);
+                const matchCategory = selectedCategory === 'semua' || word.category === selectedCategory;
+                return matchSearch && matchCategory;
+            });
+            renderWords(filtered);
+        }
+
+        function renderWords(words = slangWords) {
+            const container = document.getElementById('wordList');
+            if (words.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">😔</div>
+                        <div class="empty-state-text">Kata tidak ditemukan</div>
+                        <p style="color: #999; margin-top: 10px;">Coba kata kunci lain atau pilih kategori berbeda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = words.map(word => createWordCard(word)).join('');
+        }
+
+        function createWordCard(word) {
+            const isLiked = likedWords.includes(word.id);
+
+            return `
+                <div class="word-card">
+                    <div class="word-header">
+                        <div>
+                            <span class="word-title">${word.word}</span>
+                            ${word.trending ? '<span class="trending-badge">🔥 Trending</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="word-meaning">${word.meaning}</div>
+                    <div class="word-example">"${word.example}"</div>
+                    <div class="tags">
+                        <span class="tag tag-category">${categories.find(c => c.id === word.category)?.icon} ${word.category}</span>
+                        <span class="tag tag
+-origin">📍 ${word.origin}</span>
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${word.id})">
+                            ${isLiked ? '❤️' : '🤍'} ${isLiked ? 'Disukai' : 'Suka'}
+                        </button>
+                        <button class="action-btn share-btn" onclick="shareWord(${word.id})">
+                            📤 Bagikan
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleLike(id) {
+            if (likedWords.includes(id)) {
+                likedWords = likedWords.filter(w => w !== id);
+            } else {
+                likedWords.push(id);
+            }
+            updateStats();
+            renderCurrentTab();
+        }
+
+        function shareWord(id) {
+            const word = slangWords.find(w => w.id === id);
+            alert(`Berbagi: "${word.word}" - ${word.meaning}\n\nDari: Kamus Gaul - Kelompok 1 Kelas X-3 SMAN 11 Bandung`);
+        }
+
+        function updateStats() {
+            document.getElementById('totalWords').textContent = slangWords.length;
+            document.getElementById('totalCategories').textContent = categories.length - 1;
+            document.getElementById('totalTrending').textContent = slangWords.filter(w => w.trending).length;
+            document.getElementById('totalLiked').textContent = likedWords.length;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('kamusTab').classList.add('hidden');
+            document.getElementById('trendingTab').classList.add('hidden');
+            document.getElementById('favoritTab').classList.add('hidden');
+
+            if (tab === 'kamus') {
+                document.getElementById('kamusTab').classList.remove('hidden');
+                filterWords();
+            } else if (tab === 'trending') {
+                document.getElementById('trendingTab').classList.remove('hidden');
+                const trending = slangWords.filter(w => w.trending);
+                document.getElementById('trendingList').innerHTML = trending.map(w => createWordCard(w)).join('');
+            } else if (tab === 'favorit') {
+                document.getElementById('favoritTab').classList.remove('hidden');
+                const favorit = slangWords.filter(w => likedWords.includes(w.id));
+                if (favorit.length === 0) {
+                    document.getElementById('favoritList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">❤️</div>
+                            <div class="empty-state-text">Belum ada favorit</div>
+                            <p style="color: #999; margin-top: 10px;">Tekan tombol love pada kata yang kamu suka!</p>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('favoritList').innerHTML = favorit.map(w => createWordCard(w)).join('');
+                }
+            }
+        }
+
+        function renderCurrentTab() {
+            const activeTab = document.querySelector('.tab-btn.active').textContent.includes('Kamus') ? 'kamus' : 
+                             document.querySelector('.tab-btn.active').textContent.includes('Trending') ? 'trending' : 'favorit';
+            
+            if (activeTab === 'kamus') {
+                filterWords();
+            } else if (activeTab === 'trending') {
+                const trending = slangWords.filter(w => w.trending);
+                document.getElementById('trendingList').innerHTML = trending.map(w => createWordCard(w)).join('');
+            } else {
+                const favorit = slangWords.filter(w => likedWords.includes(w.id));
+                if (favorit.length === 0) {
+                    document.getElementById('favoritList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">❤️</div>
+                            <div class="empty-state-text">Belum ada favorit</div>
+                            <p style="color: #999; margin-top: 10px;">Tekan tombol love pada kata yang kamu suka!</p>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('favoritList').innerHTML = favorit.map(w => createWordCard(w)).join('');
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
+```
